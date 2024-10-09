@@ -14,12 +14,19 @@ public class WebSocketServer : MonoBehaviour
     public CameraController cameraController; // Assign this in the Unity Inspector
     public bool isTransformEnabled = false;   // Flag to control transform application manually
 
+    private void Start()
+    {
+        StartServer();
+    }
+
+
     // Start the WebSocket server
     public void StartServer()
     {
         // Initialize the HttpListener and set the listening address and port
         httpListener = new HttpListener();
-        httpListener.Prefixes.Add("http://localhost:8080/"); // You can change the port if needed
+        //httpListener.Prefixes.Add("http://localhost:8080/"); // You can change the port if needed
+        httpListener.Prefixes.Add("http://*:8080/");
         httpListener.Start();
 
         Debug.Log("WebSocket server started on ws://localhost:8080/");
