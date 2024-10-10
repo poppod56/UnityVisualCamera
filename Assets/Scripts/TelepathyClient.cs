@@ -7,6 +7,8 @@ public class TelepathyClient : MonoBehaviour
 {
     public Transform arCameraTransform;  // Reference to the AR camera's transform
     private Telepathy.Client client;
+    public string serverIP="192.168.1.183";
+    public int serverPort=8080;
 
     void Start()
     {
@@ -23,7 +25,7 @@ public class TelepathyClient : MonoBehaviour
         client.OnDisconnected = () => Debug.Log("Client Disconnected from Server");
 
         // Connect to the server (replace "localhost" with your server's IP if needed)
-        client.Connect("192.168.1.183", 8080);  // Replace IP and port as necessary
+        client.Connect(serverIP, serverPort);  // Replace IP and port as necessary
     }
 
     void Update()
