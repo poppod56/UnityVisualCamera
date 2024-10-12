@@ -5,8 +5,7 @@ using System.Collections.Generic;
 
 #if UNITY_EDITOR
 
-namespace Poppod
-{
+
     public class CameraRecorder : MonoBehaviour
     {
         [Header("Camera to Record")]
@@ -146,7 +145,7 @@ namespace Poppod
             this.rotation = rotation;
         }
     }
-}
+
 
 
 #endif

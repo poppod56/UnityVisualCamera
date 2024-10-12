@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 
-namespace Poppod {
+
     [CustomEditor(typeof(CameraRecorder))]
     public class CameraRecorderEditor : Editor
     {
@@ -25,5 +25,5 @@ namespace Poppod {
             }
         }
     }
-}
+
 
