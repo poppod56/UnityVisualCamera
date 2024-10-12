@@ -5,7 +5,8 @@ using System.Collections.Generic;
 
 #if UNITY_EDITOR
 
-
+namespace Poppod  // Add namespace to match with the editor script
+{
     public class CameraRecorder : MonoBehaviour
     {
         [Header("Camera to Record")]
@@ -146,6 +147,6 @@ using System.Collections.Generic;
         }
     }
 
-
+}
 
 #endif
