@@ -1,100 +1,152 @@
 using UnityEngine;
 using UnityEditor;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+
 #if UNITY_EDITOR
-public class CameraRecorder : MonoBehaviour
-{
-    public Transform cameraTransform;  // The camera you want to record
-    public string animationClipName = "CameraAnimation";  // Name for the animation clip
 
-    private List<KeyframeData> recordedData = new List<KeyframeData>();
-    private bool isRecording = false;
-    
-    void Update()
+namespace Poppod
+{
+    public class CameraRecorder : MonoBehaviour
     {
-        if (isRecording)
+        [Header("Camera to Record")]
+        public Transform cameraTransform;  // The camera you want to record
+
+        [Header("Recording Settings")]
+        public string animationClipName = "CameraAnimation";  // Base name for the animation clip
+
+        private List<KeyframeData> recordedData = new List<KeyframeData>(); // Store recorded keyframes
+        private bool isRecording = false;  // Recording state
+        private float recordingStartTime;  // Timestamp when recording starts
+
+        void Update()
         {
-            // Record position and rotation every frame
-            recordedData.Add(new KeyframeData
+            if (isRecording)
             {
-                time = Time.time,
-                position = cameraTransform.position,
-                rotation = cameraTransform.rotation
-            });
+                RecordFrame();
+            }
         }
-    }
 
-     [ContextMenu("Start Recording")]
-    public void StartRecording()
-    {
-        isRecording = true;
-        recordedData.Clear();
-        Debug.Log("Recording Started");
-    }
-
-    [ContextMenu("Stop Recording")]
-    public void StopRecording()
-    {
-        isRecording = false;
-        SaveAnimationClip();
-        Debug.Log("Recording Stopped and Animation Saved");
-    }
-
-    private void SaveAnimationClip()
-    {
-        AnimationClip clip = new AnimationClip();
-
-        // Create position and rotation curves
-        AnimationCurve posX = new AnimationCurve();
-        AnimationCurve posY = new AnimationCurve();
-        AnimationCurve posZ = new AnimationCurve();
-
-        AnimationCurve rotX = new AnimationCurve();
-        AnimationCurve rotY = new AnimationCurve();
-        AnimationCurve rotZ = new AnimationCurve();
-        AnimationCurve rotW = new AnimationCurve();
-
-        foreach (var keyframe in recordedData)
+        // Record camera position and rotation at the current frame
+        private void RecordFrame()
         {
-            posX.AddKey(keyframe.time, keyframe.position.x);
-            posY.AddKey(keyframe.time, keyframe.position.y);
-            posZ.AddKey(keyframe.time, keyframe.position.z);
-
-            rotX.AddKey(keyframe.time, keyframe.rotation.x);
-            rotY.AddKey(keyframe.time, keyframe.rotation.y);
-            rotZ.AddKey(keyframe.time, keyframe.rotation.z);
-            rotW.AddKey(keyframe.time, keyframe.rotation.w);
+            float elapsedTime = Time.time - recordingStartTime;
+            recordedData.Add(new KeyframeData(elapsedTime, cameraTransform.position, cameraTransform.rotation));
         }
 
-        // Add curves to the animation clip
-        clip.SetCurve("", typeof(Transform), "localPosition.x", posX);
-        clip.SetCurve("", typeof(Transform), "localPosition.y", posY);
-        clip.SetCurve("", typeof(Transform), "localPosition.z", posZ);
+        [ContextMenu("Start Recording")]
+        public void StartRecording()
+        {
+            isRecording = true;
+            recordedData.Clear();
+            recordingStartTime = Time.time;  // Capture the current time as the start time
+            Debug.Log("Recording started.");
+        }
 
-        clip.SetCurve("", typeof(Transform), "localRotation.x", rotX);
-        clip.SetCurve("", typeof(Transform), "localRotation.y", rotY);
-        clip.SetCurve("", typeof(Transform), "localRotation.z", rotZ);
-        clip.SetCurve("", typeof(Transform), "localRotation.w", rotW);
+        [ContextMenu("Stop Recording")]
+        public void StopRecording()
+        {
+            isRecording = false;
+            AdjustKeyframeTimesToStartAtZero();  // Ensure animation starts at time 0
+            SaveAnimationClip();
+            Debug.Log("Recording stopped and animation saved.");
+        }
 
-         // Generate a timestamp and append it to the animation clip name
-        string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");  // Format: YearMonthDay_HourMinuteSecond
-        string uniqueAnimationClipName = $"{animationClipName}_{timestamp}.anim";
+        // Adjust keyframe times so the animation starts at time 0
+        private void AdjustKeyframeTimesToStartAtZero()
+        {
+            if (recordedData.Count == 0) return;
 
-        // Save the animation clip with the unique name
-        AssetDatabase.CreateAsset(clip, $"Assets/{uniqueAnimationClipName}");
-        AssetDatabase.SaveAssets();
+            float firstFrameTime = recordedData[0].time;  // Capture the time of the first frame
 
-        Debug.Log($"Animation clip '{animationClipName}' saved successfully.");
+            // Adjust keyframe times by subtracting the first frame's time from each keyframe
+            for (int i = 0; i < recordedData.Count; i++)
+            {
+                // Retrieve, modify, and then reassign the modified struct to avoid the CS1612 error
+                KeyframeData modifiedKeyframe = recordedData[i];
+                modifiedKeyframe.time -= firstFrameTime;
+                recordedData[i] = modifiedKeyframe;
+            }
+        }
+
+        // Save the recorded animation as an AnimationClip asset
+        private void SaveAnimationClip()
+        {
+            AnimationClip clip = new AnimationClip();
+            CreatePositionCurves(clip);
+            CreateRotationCurves(clip);
+
+            string uniqueClipName = GenerateUniqueClipName();
+            AssetDatabase.CreateAsset(clip, $"Assets/{uniqueClipName}");
+            AssetDatabase.SaveAssets();
+            Debug.Log($"Animation clip '{uniqueClipName}' saved successfully.");
+        }
+
+        // Generate a unique clip name using a timestamp
+        private string GenerateUniqueClipName()
+        {
+            string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");  // Format: YearMonthDay_HourMinuteSecond
+            return $"{animationClipName}_{timestamp}.anim";
+        }
+
+        // Create position animation curves from recorded data
+        private void CreatePositionCurves(AnimationClip clip)
+        {
+            AnimationCurve posX = new AnimationCurve();
+            AnimationCurve posY = new AnimationCurve();
+            AnimationCurve posZ = new AnimationCurve();
+
+            foreach (var keyframe in recordedData)
+            {
+                posX.AddKey(keyframe.time, keyframe.position.x);
+                posY.AddKey(keyframe.time, keyframe.position.y);
+                posZ.AddKey(keyframe.time, keyframe.position.z);
+            }
+
+            clip.SetCurve("", typeof(Transform), "localPosition.x", posX);
+            clip.SetCurve("", typeof(Transform), "localPosition.y", posY);
+            clip.SetCurve("", typeof(Transform), "localPosition.z", posZ);
+        }
+
+        // Create rotation animation curves from recorded data
+        private void CreateRotationCurves(AnimationClip clip)
+        {
+            AnimationCurve rotX = new AnimationCurve();
+            AnimationCurve rotY = new AnimationCurve();
+            AnimationCurve rotZ = new AnimationCurve();
+            AnimationCurve rotW = new AnimationCurve();
+
+            foreach (var keyframe in recordedData)
+            {
+                rotX.AddKey(keyframe.time, keyframe.rotation.x);
+                rotY.AddKey(keyframe.time, keyframe.rotation.y);
+                rotZ.AddKey(keyframe.time, keyframe.rotation.z);
+                rotW.AddKey(keyframe.time, keyframe.rotation.w);
+            }
+
+            clip.SetCurve("", typeof(Transform), "localRotation.x", rotX);
+            clip.SetCurve("", typeof(Transform), "localRotation.y", rotY);
+            clip.SetCurve("", typeof(Transform), "localRotation.z", rotZ);
+            clip.SetCurve("", typeof(Transform), "localRotation.w", rotW);
+        }
+    }
+
+    // Struct to store keyframe data
+    [Serializable]
+    public struct KeyframeData
+    {
+        public float time;
+        public Vector3 position;
+        public Quaternion rotation;
+
+        public KeyframeData(float time, Vector3 position, Quaternion rotation)
+        {
+            this.time = time;
+            this.position = position;
+            this.rotation = rotation;
+        }
     }
 }
 
-// Struct to store keyframe data
-public struct KeyframeData
-{
-    public float time;
-    public Vector3 position;
-    public Quaternion rotation;
-}
 
 #endif

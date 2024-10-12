@@ -2,50 +2,55 @@ using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
 
-public class DisplayIPAddress : MonoBehaviour
+
+namespace Poppod
 {
-    private string localIPAddress;
-
-    private void Start()
+    public class DisplayIPAddress : MonoBehaviour
     {
-        localIPAddress = GetLocalIPAddress();
-        Debug.Log("Local IP Address: " + localIPAddress);
-    }
+        private string localIPAddress;
 
-    // Function to get the local IP address
-    private string GetLocalIPAddress()
-    {
-        string ipAddress = "Unknown IP Address";
-
-        try
+        private void Start()
         {
-            // Get host name
-            string hostName = Dns.GetHostName();
+            localIPAddress = GetLocalIPAddress();
+            Debug.Log("Local IP Address: " + localIPAddress);
+        }
 
-            // Get the IP addresses associated with the host
-            IPAddress[] addresses = Dns.GetHostAddresses(hostName);
+        // Function to get the local IP address
+        private string GetLocalIPAddress()
+        {
+            string ipAddress = "Unknown IP Address";
 
-            foreach (IPAddress address in addresses)
+            try
             {
-                // Check for IPv4 address
-                if (address.AddressFamily == AddressFamily.InterNetwork)
+                // Get host name
+                string hostName = Dns.GetHostName();
+
+                // Get the IP addresses associated with the host
+                IPAddress[] addresses = Dns.GetHostAddresses(hostName);
+
+                foreach (IPAddress address in addresses)
                 {
-                    ipAddress = address.ToString();
-                    break;
+                    // Check for IPv4 address
+                    if (address.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        ipAddress = address.ToString();
+                        break;
+                    }
                 }
             }
+            catch (SocketException ex)
+            {
+                Debug.LogError("SocketException: " + ex.Message);
+            }
+
+            return ipAddress;
         }
-        catch (SocketException ex)
+
+        private void OnGUI()
         {
-            Debug.LogError("SocketException: " + ex.Message);
+            // Display the local IP address in a simple UI
+            GUILayout.Label("Local IP Address: " + localIPAddress);
         }
-
-        return ipAddress;
-    }
-
-    private void OnGUI()
-    {
-        // Display the local IP address in a simple UI
-        GUILayout.Label("Local IP Address: " + localIPAddress);
     }
 }
+
