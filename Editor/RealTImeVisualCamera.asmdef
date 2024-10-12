@@ -1,5 +1,5 @@
 {
-    "name": "RealTImeVisualCamera",
+    "name": "EditorVisualCamera",
     "rootNamespace": "",
     "references": [
         "GUID:8b5d3cb0df3a10e4e863b02113da032c"
