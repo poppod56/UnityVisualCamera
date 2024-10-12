@@ -1,0 +1,16 @@
+{
+    "name": "com.poppod56.visual_camera",  
+    "version": "1.0.0",  
+    "displayName": "Unity Realtime Visual Camera",  
+    "description": "This is a Unity package for camera synchronization.",  
+    "unity": "2020.3",  
+    "author": {
+        "name": "Poppod",
+        "email": "pop.podmenyou@gmail.com",
+        "url": "https://github.com/poppod56"
+      }
+    ,
+    "keywords": ["camera", "sync", "network", "unity"],  
+    "dependencies": {}  
+  }
+  
