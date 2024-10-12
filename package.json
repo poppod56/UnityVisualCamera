@@ -1,8 +1,8 @@
 {
-    "name": "com.poppod56.visual_camera",  
+    "name": "com.poppod56.visualcamera",  
     "version": "1.0.0",  
     "displayName": "Unity Realtime Visual Camera",  
-    "description": "This is a Unity package for camera synchronization.",  
+    "description": "This package provides camera synchronization using Telepathy.",  
     "unity": "2020.3",  
     "author": {
         "name": "Poppod",
@@ -12,6 +12,14 @@
     ,
     "keywords": ["camera", "sync", "network", "unity","telepathy", 
     "arfoundation"],  
+    "samples": [
+      {
+        "displayName": "Visual Camera",
+        "description": "A sample scene showing how to set up and use camera synchronization.",
+        "path": "Samples~/Camera Sync Sample"
+      }
+    ],
     "dependencies": {"com.unity.xr.arfoundation": "5.1.4","com.unity.xr.interaction.toolkit":"3.0.4","com.unity.render-pipelines.universal":"14.0.9"}  
+
   }
   
