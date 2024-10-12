@@ -12,6 +12,6 @@
     ,
     "keywords": ["camera", "sync", "network", "unity","telepathy", 
     "arfoundation"],  
-    "dependencies": {"com.unity.xr.arfoundation": "5.1.4"}  
+    "dependencies": {"com.unity.xr.arfoundation": "5.1.4","com.unity.xr.interaction.toolkit":"3.0.4","com.unity.render-pipelines.universal":"14.0.9"}  
   }
   
