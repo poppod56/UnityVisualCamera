@@ -10,7 +10,8 @@
         "url": "https://github.com/poppod56"
       }
     ,
-    "keywords": ["camera", "sync", "network", "unity"],  
-    "dependencies": {}  
+    "keywords": ["camera", "sync", "network", "unity","telepathy", 
+    "arfoundation"],  
+    "dependencies": {"com.unity.xr.arfoundation": "5.1.4"}  
   }
   
