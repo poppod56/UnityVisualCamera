@@ -12,9 +12,11 @@ This Unity package provides real-time camera synchronization between an AR camer
 
 ## Use Cases
 
-- **Real-Time Camera Preset**: Sync AR camera transformations in real time for virtual production or collaborative design.
+
+- **Real-Time Camera Presentation**: Sync AR camera transformations in real time for virtual production, collaborative design, or live presentations. This feature allows you to display and present camera movements on a screen in real time.
 - **Cutscene Creation**: Create realistic camera animations and record the camera’s movement for Unity’s Timeline or other animation tools.
 - **Realistic Camera Movement**: Capture lifelike camera movements and save them as animation clips, useful for cinematic projects.
+
 
 ## Installation
 
