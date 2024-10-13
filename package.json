@@ -16,7 +16,7 @@
       {
         "displayName": "Visual Camera",
         "description": "A sample scene showing how to set up and use camera synchronization.",
-        "path": "Samples~/Camera Sync Sample"
+        "path": "Samples~/RealtimeVisualCamera"
       }
     ],
     "dependencies": {"com.unity.xr.arfoundation": "5.1.4","com.unity.xr.interaction.toolkit":"3.0.4","com.unity.render-pipelines.universal":"14.0.9"}  
