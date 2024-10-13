@@ -39,6 +39,9 @@ The package includes the following dependencies:
 ```
 ## Setup and Usage
 
+ ####Example VDO Setup
+ https://youtu.be/5HysCVaIZvk
+ 
 ### 1. Mobile (Client) Setup
 
 1. **AR Mobile Project Setup**:
