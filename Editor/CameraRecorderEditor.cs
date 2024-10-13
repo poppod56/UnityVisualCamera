@@ -4,8 +4,8 @@ using UnityEngine;
 
 
 
-
-    [CustomEditor(typeof(CameraRecorder))]
+#if UNITY_EDITOR
+[CustomEditor(typeof(CameraRecorder))]
     public class CameraRecorderEditor : Editor
     {
         public override void OnInspectorGUI()
@@ -26,4 +26,4 @@ using UnityEngine;
         }
     }
 
-
+#endif
